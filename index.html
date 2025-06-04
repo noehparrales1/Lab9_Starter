@@ -88,6 +88,15 @@
   </main>
 
   <script>
+    // Custom error class
+    class CalculatorError extends Error {
+      constructor(message) {
+        super(message);
+        this.name = "CalculatorError";
+      }
+    }
+
+    // Try/catch example on calculator
     let form = document.querySelector('form');
     form.addEventListener('submit', e => {
       e.preventDefault();
@@ -95,14 +104,138 @@
       let firstNum = document.querySelector('#first-num').value;
       let secondNum = document.querySelector('#second-num').value;
       let operator = document.querySelector('#operator').value;
-      output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+
+      try {
+        if (isNaN(firstNum) || isNaN(secondNum)) {
+          throw new TypeError("Inputs must be numbers");
+        }
+
+        if (operator === "/" && Number(secondNum) === 0) {
+          throw new CalculatorError("Cannot divide by zero");
+        }
+
+        output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+      } catch (err) {
+        console.error("Caught in try/catch:", err);
+        output.innerHTML = "Error: " + err.message;
+      } finally {
+        console.log("Calculation attempted.");
+      }
     });
 
-    let errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
+// button refs
+let errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
+let count = 0;
+let timerLabel = 'MyTimer';
 
-    // Start your code here
-    // You may move this JS to another file if you wish
-  </script>
+// console.log
+errorBtns[0].addEventListener('click', () => {
+  console.log("log works");
+});
+
+// console.error
+errorBtns[1].addEventListener('click', () => {
+  console.error("error shows");
+});
+
+// console.count
+errorBtns[2].addEventListener('click', () => {
+  count++;
+  console.count("counting");
+});
+
+// console.warn
+errorBtns[3].addEventListener('click', () => {
+  console.warn("this is a warning");
+});
+
+// console.assert
+errorBtns[4].addEventListener('click', () => {
+  let pass = false;
+  console.assert(pass, "assert failed");
+});
+
+// console.clear
+errorBtns[5].addEventListener('click', () => {
+  console.clear();
+});
+
+// console.dir
+errorBtns[6].addEventListener('click', () => {
+  const me = { name: "Noeh", course: "CSE110" };
+  console.dir(me);
+});
+
+// console.dirxml
+errorBtns[7].addEventListener('click', () => {
+  const main = document.querySelector('main');
+  console.dirxml(main);
+});
+
+// console.group
+errorBtns[8].addEventListener('click', () => {
+  console.group("group logs");
+  console.log("log inside group");
+  console.log("another one");
+});
+
+// console.groupEnd
+errorBtns[9].addEventListener('click', () => {
+  console.groupEnd();
+});
+
+// console.table
+errorBtns[10].addEventListener('click', () => {
+  const data = [
+    { name: "Alice", age: 22 },
+    { name: "Bob", age: 25 }
+  ];
+  console.table(data);
+});
+
+// console.time
+errorBtns[11].addEventListener('click', () => {
+  if (!console._timerRunning) {
+    console.time(timerLabel);
+    console._timerRunning = true;
+  } else {
+    console.warn("timer already running");
+  }
+});
+
+// console.timeEnd
+errorBtns[12].addEventListener('click', () => {
+  if (console._timerRunning) {
+    console.timeEnd(timerLabel);
+    console._timerRunning = false;
+  } else {
+    console.warn("no timer running");
+  }
+});
+
+// console.trace
+errorBtns[13].addEventListener('click', () => {
+  function a() {
+    b();
+  }
+  function b() {
+    console.trace("trace from b");
+  }
+  a();
+});
+
+// global error handler
+window.onerror = function (msg) {
+  console.log("caught a global error:", msg);
+  return true;
+};
+
+// trigger a global error
+errorBtns[14].addEventListener('click', () => {
+  nonExistentFunction(); // rip
+});
+
+</script>
 </body>
 
 </html>
